@@ -11,13 +11,23 @@ project(ArrowMinimalExample VERSION 1.0
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/" ${CMAKE_MODULE_PATH})
 
-include(InstallArrow)
+include(InstallArrow) 
 install_arrow()
 find_package(Arrow CONFIG REQUIRED)
+find_package(Parquet CONFIG REQUIRED PATHS "${CMAKE_PREFIX_PATH}/lib/cmake/arrow" )
+find_package(ArrowFlight CONFIG REQUIRED PATHS "${CMAKE_PREFIX_PATH}/lib/cmake/arrow" )
 
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(arrow_example app.cpp)
 
-target_link_libraries(arrow_example PRIVATE arrow_static arrow_bundled_dependencies ${CMAKE_DL_LIBS} curl ssl crypto)
+target_link_libraries(arrow_example 
+    PRIVATE
+        arrow_flight_static
+        parquet_static
+        arrow_static
+        arrow_bundled_dependencies
+        ${CMAKE_DL_LIBS}
+        curl
+        )
 
